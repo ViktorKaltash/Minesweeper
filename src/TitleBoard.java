@@ -1,5 +1,3 @@
-import Language.English;
-import Language.Russian;
 import UI.TextFieldLimit;
 
 import javax.swing.*;
@@ -8,14 +6,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Properties;
 
 public class TitleBoard {
     private JFrame frame;
     private JFrame optionsFrame;
     private JFrame customGameFrame;
-    private static String App_name;
     private GameBoard gameBoard;
     private HashMap<String, String> diffMap;
     private JButton btnNewGame, btnCustomGame, btnOptions, btnExit;
@@ -45,7 +41,6 @@ public class TitleBoard {
             return;
         }
 
-
         int rows = 4;
         int columns = 1;
         JPanel gridPanel = new JPanel();
@@ -59,7 +54,6 @@ public class TitleBoard {
             }
         }
 
-//        btnNewGame = new JButton("Новая игра");
         btnNewGame.setMargin(new Insets(5, 8, 5, 8));
         btnNewGame.addMouseListener(new MouseAdapter() {
             @Override
@@ -104,7 +98,7 @@ public class TitleBoard {
             @Override
             public void mouseClicked(MouseEvent e) {
                 frame.dispose();
-                setOptionsFrame();
+                optionsFrame.setVisible(true);
             }
         });
 
@@ -125,16 +119,16 @@ public class TitleBoard {
             }
         }
         frame.add(gridPanel);
-        frame.setVisible(true);
 
+        setButtonsEqualSizeMenu();
 
         panelHolder[0][0].add(btnNewGame);
         panelHolder[1][0].add(btnCustomGame);
         panelHolder[2][0].add(btnOptions);
         panelHolder[3][0].add(btnExit);
+        frame.setVisible(true);
     }
     private void prepareOptionFrame() {
-        //Язык|Сложность
         optionsFrame = new JFrame(App.lang.OPTIONS);
         optionsFrame.setSize(360, 360);
         optionsFrame.setVisible(false);
@@ -176,7 +170,6 @@ public class TitleBoard {
                     FileOutputStream fos = new FileOutputStream(App.PROP_PATH);
                     properties.store(fos, "");
                     fos.close();
-//                    resetLanguage(optCMB_language.getSelectedItem().toString());
                 } catch (IOException ex) {
                     return;
                 }
@@ -317,7 +310,6 @@ public class TitleBoard {
     }
     private void readProperties() throws IOException {
         diffMap = new HashMap<>();
-
         diffMap.put(App.lang.GAME_DIFFICULTY_EASY, "Easy");
         diffMap.put(App.lang.GAME_DIFFICULTY_MEDIUM, "Medium");
         diffMap.put(App.lang.GAME_DIFFICULTY_HARD, "Hard");
@@ -339,37 +331,29 @@ public class TitleBoard {
         optCMB_language.addItem(App.lang_arr[0]);
         optCMB_language.addItem(App.lang_arr[1]);
     }
+    private void setButtonsEqualSizeMenu() {
+        int maxWidth = 0;
+        int maxHeight = 0;
 
-//    private void resetLanguage(String langTmp) throws IOException {
-//        switch (langTmp) {
-//            case "english" -> App.lang = new English();
-//            case "russian" -> App.lang = new Russian();
-//        }
-//
-//        for (String key : diffMap.keySet()) {
-//            diffMap.remove(key);
-//        }
-//
-//        diffMap.put(App.lang.GAME_DIFFICULTY_EASY, "Easy");
-//        diffMap.put(App.lang.GAME_DIFFICULTY_MEDIUM, "Medium");
-//        diffMap.put(App.lang.GAME_DIFFICULTY_HARD, "Hard");
-//
-//        btnNewGame.setText("Новая игра");
-//        btnCustomGame.setText(App.lang.CUSTOM);
-//        btnOptions = new JButton(App.lang.OPTIONS);
-//        btnExit = new JButton(App.lang.EXIT);
-//
-//        optCMB_difficulty = new JComboBox<>();
-//        optCMB_difficulty.addItem(App.lang.GAME_DIFFICULTY_EASY);
-//        optCMB_difficulty.addItem(App.lang.GAME_DIFFICULTY_MEDIUM);
-//        optCMB_difficulty.addItem(App.lang.GAME_DIFFICULTY_HARD);
-//
-//        optCMB_language = new JComboBox<>();
-//        optCMB_language.addItem(App.lang_arr[0]);
-//        optCMB_language.addItem(App.lang_arr[1]);
-//    }
+        maxWidth = getMaxBtnWidthSize(btnNewGame, maxWidth);
+        maxWidth = getMaxBtnWidthSize(btnCustomGame, maxWidth);
+        maxWidth = getMaxBtnWidthSize(btnOptions, maxWidth);
+        maxWidth = getMaxBtnWidthSize(btnExit, maxWidth);
 
-    private void setOptionsFrame() {
-        optionsFrame.setVisible(true);
+        maxHeight = getMaxBtnHeightSize(btnNewGame, maxHeight);
+        maxHeight = getMaxBtnHeightSize(btnCustomGame, maxHeight);
+        maxHeight = getMaxBtnHeightSize(btnOptions, maxHeight);
+        maxHeight = getMaxBtnHeightSize(btnExit, maxHeight);
+
+        btnNewGame.setPreferredSize(new Dimension(maxWidth, maxHeight));
+        btnCustomGame.setPreferredSize(new Dimension(maxWidth, maxHeight));
+        btnOptions.setPreferredSize(new Dimension(maxWidth, maxHeight));
+        btnExit.setPreferredSize(new Dimension(maxWidth, maxHeight));
+    }
+    private int getMaxBtnWidthSize(JButton btn, int compareTo) {
+        return Math.max(compareTo, btn.getPreferredSize().width);
+    }
+    private int getMaxBtnHeightSize(JButton btn, int compareTo) {
+        return Math.max(compareTo, btn.getPreferredSize().height);
     }
 }
