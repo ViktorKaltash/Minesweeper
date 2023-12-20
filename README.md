@@ -38,9 +38,3 @@ Here's example of custom gamemode:
 
 After starting a game you can leave in any moment just by pressing 'back' button. After you loose or win you will see
 a label above the game.
-
-## WIP
-I want to add new features to the project such as:
-* add statistic tracking
-* add time panel into the game
-* try to add database (Maybe?)
